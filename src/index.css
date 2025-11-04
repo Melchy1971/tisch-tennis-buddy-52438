@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tischtennis Verein Design System - Modern Sports Theme */
+
+@import "./tokens.css";
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    /* Vereinsfarben: Rot & Schwarz */
+    --primary: 0 78% 52%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 0 78% 44%;
+
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-hover: 0 0% 10%;
+
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 38%;
+
+    --accent: 0 78% 52%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 0 78% 52%;
+
+    /* Red & Black Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 78% 52%), hsl(0 82% 34%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 16%), hsl(0 0% 6%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 78% 52%), hsl(0 0% 10%));
+
+    /* Dramatic shadows in Vereinsfarben */
+    --shadow-sport: 0 10px 30px -10px hsl(0 78% 40% / 0.45);
+    --shadow-accent: 0 4px 20px -4px hsl(0 0% 8% / 0.35);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 0 78% 52%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 0 78% 52%;
+  }
+
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 96%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 0 78% 52%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 0 78% 44%;
+
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 96%;
+    --secondary-hover: 0 0% 12%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 68%;
+
+    --accent: 0 78% 52%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 78% 52%;
+
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 0 78% 52%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 0 78% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
