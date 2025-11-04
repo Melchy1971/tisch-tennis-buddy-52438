@@ -40,7 +40,7 @@ export const DeveloperProfile = () => {
       const { data: roles, error: rolesError } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', profiles.user_id);
+        .eq('user_id', profiles.id);
 
       if (rolesError) {
         console.error('Error fetching roles:', rolesError);

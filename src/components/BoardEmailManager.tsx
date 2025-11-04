@@ -95,7 +95,7 @@ export const BoardEmailManager = () => {
       const formattedData: DistributionList[] = (data || []).map(item => ({
         id: item.id,
         name: item.name,
-        groups: item.groups || [],
+        groups: Array.isArray(item.groups) ? item.groups : [],
         manualEmails: item.manual_emails || []
       }));
 
