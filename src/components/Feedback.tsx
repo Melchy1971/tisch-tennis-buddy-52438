@@ -77,16 +77,17 @@ export const Feedback = () => {
       if (error) throw error;
 
       // Fetch profiles separately
+      // Note: profiles.id IS the user_id (it references auth.users.id)
       const userIds = feedbackData?.map(f => f.user_id) || [];
       const { data: profilesData } = await supabase
         .from("profiles")
-        .select("user_id, first_name, last_name")
-        .in("user_id", userIds);
+        .select("id, first_name, last_name")
+        .in("id", userIds);
 
       // Merge data
       const mergedData = feedbackData?.map(feedback => ({
         ...feedback,
-        profile: profilesData?.find(p => p.user_id === feedback.user_id) || null
+        profile: profilesData?.find(p => p.id === feedback.user_id) || null
       })) || [];
 
       setFeedbackList(mergedData);

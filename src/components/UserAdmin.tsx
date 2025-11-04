@@ -200,7 +200,6 @@ type SeasonTeamGroup = {
     id: string;
     name: string;
     league: string;
-    division?: string;
   }[];
 };
 
@@ -334,7 +333,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
     try {
       const { data: teamsData, error: teamsError } = await supabase
         .from('teams')
-        .select('id, name, league, division, season_id')
+        .select('id, name, league, season_id')
         .order('name', { ascending: true });
 
       if (teamsError) throw teamsError;
@@ -358,8 +357,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
           existingSeason.teams.push({
             id: team.id,
             name: team.name,
-            league: team.league,
-            division: team.division ?? undefined
+            league: team.league
           });
         } else {
           const meta = seasonMeta.get(team.season_id);
@@ -371,8 +369,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
               {
                 id: team.id,
                 name: team.name,
-                league: team.league,
-                division: team.division ?? undefined
+                league: team.league
               }
             ]
           });

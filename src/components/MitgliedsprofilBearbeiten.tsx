@@ -114,21 +114,21 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
       
       let profile = null;
       
-      // If userId is provided, load profile by user_id
+      // If userId is provided, load profile by id (profiles.id IS the user_id)
       if (userId) {
         const { data, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('user_id', userId)
+          .eq('id', userId)
           .maybeSingle();
         
         if (profileError) throw profileError;
         profile = data;
         if (profile) {
           setCurrentProfileId(profile.id);
-          setCurrentUserId(profile.user_id);
+          setCurrentUserId(profile.id); // profiles.id is the user_id
         }
-      } 
+      }
       // If profileId is provided, load profile by id
       else if (profileId) {
         const { data, error: profileError } = await supabase
@@ -141,7 +141,7 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         profile = data;
         if (profile) {
           setCurrentProfileId(profile.id);
-          setCurrentUserId(profile.user_id);
+          setCurrentUserId(profile.id); // profiles.id is the user_id
         }
       }
       // Otherwise, get current user and load their profile
@@ -155,14 +155,14 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         const { data, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .maybeSingle();
         
         if (profileError) throw profileError;
         profile = data;
         if (profile) {
           setCurrentProfileId(profile.id);
-          setCurrentUserId(user.id);
+          setCurrentUserId(profile.id); // profiles.id is the user_id
         }
       }
 
@@ -189,12 +189,12 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         });
         setStatus(profile.status || 'active');
 
-        // Load user roles if user_id exists
-        if (profile.user_id) {
+        // Load user roles (profiles.id IS the user_id)
+        if (profile.id) {
           const { data: userRoles, error: rolesError } = await supabase
             .from('user_roles')
             .select('role')
-            .eq('user_id', profile.user_id);
+            .eq('user_id', profile.id);
 
           if (rolesError) throw rolesError;
 
@@ -332,24 +332,26 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
     }
 
     try {
+      // profiles.id IS the user_id, so we can just check by id
       const { data: existingProfile, error: fetchError } = await supabase
         .from('profiles')
-        .select('id, user_id')
-        .eq('user_id', currentUserId)
+        .select('id')
+        .eq('id', currentUserId)
         .maybeSingle();
 
       if (fetchError) throw fetchError;
 
       if (existingProfile) {
         setCurrentProfileId(existingProfile.id);
-        setCurrentUserId(existingProfile.user_id);
+        setCurrentUserId(existingProfile.id);
         return existingProfile.id;
       }
 
+      // Create new profile with id matching the user_id
       const { data: insertedProfile, error: insertError } = await supabase
         .from('profiles')
         .insert({
-          user_id: currentUserId,
+          id: currentUserId, // Set id explicitly to match auth.users.id
           first_name: formData.firstName || null,
           last_name: formData.lastName || null,
           email: formData.email || null,
@@ -363,13 +365,13 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
           status,
           member_since: formData.memberSince ? formData.memberSince : null,
         })
-        .select('id, user_id')
+        .select('id')
         .single();
 
       if (insertError) throw insertError;
 
       setCurrentProfileId(insertedProfile.id);
-      setCurrentUserId(insertedProfile.user_id);
+      setCurrentUserId(insertedProfile.id);
       return insertedProfile.id;
     } catch (error) {
       console.error('Error ensuring profile exists:', error);
@@ -434,7 +436,7 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         .from('profiles')
         .update(updatePayload)
         .eq('id', ensuredProfileId)
-        .select('user_id')
+        .select('id')
         .single();
 
       if (profileError) throw profileError;
@@ -445,13 +447,14 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         throw new Error('Nicht angemeldet');
       }
 
-      // Update roles in user_roles table if user_id exists and user has permissions
-      if (canEditRoles && profile?.user_id) {
+      // Update roles in user_roles table if user has permissions
+      // Note: profile.id IS the user_id
+      if (canEditRoles && profile?.id) {
         // Get current roles
         const { data: currentRoles, error: fetchError } = await supabase
           .from('user_roles')
           .select('role')
-          .eq('user_id', profile.user_id);
+          .eq('user_id', profile.id);
 
         if (fetchError) throw fetchError;
 
@@ -482,7 +485,7 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
         if (rolesToAdd.length > 0) {
           const { error: addError } = await supabase
             .from('user_roles')
-            .insert(rolesToAdd.map((role: any) => ({ user_id: profile.user_id, role })));
+            .insert(rolesToAdd.map((role: any) => ({ user_id: profile.id, role })));
 
           if (addError) throw addError;
         }
@@ -492,7 +495,7 @@ export default function MitgliedsprofilBearbeiten({ profileId, onClose, onSaved,
           const { error: removeError } = await supabase
             .from('user_roles')
             .delete()
-            .eq('user_id', profile.user_id)
+            .eq('user_id', profile.id)
             .in('role', rolesToRemove);
 
           if (removeError) throw removeError;
