@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 
 interface Profile {
-  user_id: string;
+  id: string; // This is the user_id (references auth.users)
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -49,17 +49,17 @@ export const AdminTransfer = () => {
       // Get all profiles
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
-        .select('user_id, first_name, last_name, email')
+        .select('id, first_name, last_name, email')
         .order('last_name', { ascending: true });
 
       if (profilesError) throw profilesError;
 
       // Get current admin info
-      const currentAdminProfile = profilesData?.find(p => p.user_id === user.id);
+      const currentAdminProfile = profilesData?.find(p => p.id === user.id);
       setCurrentAdmin(currentAdminProfile || null);
 
       // Filter out current admin from selection list
-      const otherProfiles = profilesData?.filter(p => p.user_id !== user.id) || [];
+      const otherProfiles = profilesData?.filter(p => p.id !== user.id) || [];
       setProfiles(otherProfiles);
 
     } catch (error) {
@@ -221,7 +221,7 @@ export const AdminTransfer = () => {
               </SelectTrigger>
               <SelectContent>
                 {profiles.map((profile) => (
-                  <SelectItem key={profile.user_id} value={profile.user_id}>
+                  <SelectItem key={profile.id} value={profile.id}>
                     {getDisplayName(profile)}
                   </SelectItem>
                 ))}
@@ -233,7 +233,7 @@ export const AdminTransfer = () => {
             <Alert>
               <CheckCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>{getDisplayName(profiles.find(p => p.user_id === selectedUserId)!)}</strong> wird 
+                <strong>{getDisplayName(profiles.find(p => p.id === selectedUserId)!)}</strong> wird 
                 die folgenden Rollen erhalten: Administrator, Vorstand, Moderator, Spieler
               </AlertDescription>
             </Alert>

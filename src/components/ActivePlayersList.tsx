@@ -14,8 +14,8 @@ type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type UserRoleRow = Database["public"]["Tables"]["user_roles"]["Row"];
 type AppRole = Database["public"]["Enums"]["app_role"];
 
-type PlayerProfile = Pick<ProfileRow, "id" | "first_name" | "last_name" | "qttr_value" | "user_id">;
-type ProfileSelection = Pick<ProfileRow, "id" | "first_name" | "last_name" | "qttr_value" | "user_id" | "default_role">;
+type PlayerProfile = Pick<ProfileRow, "id" | "first_name" | "last_name" | "qttr_value">;
+type ProfileSelection = Pick<ProfileRow, "id" | "first_name" | "last_name" | "qttr_value" | "default_role">;
 
 interface GroupedPlayers {
   adults: PlayerProfile[];
@@ -66,11 +66,11 @@ export const ActivePlayersList = () => {
     fetchPlayers();
   }, []);
 
-  const fetchPlayers = async () => {
+    const fetchPlayers = async () => {
     try {
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, first_name, last_name, qttr_value, user_id, default_role")
+        .select("id, first_name, last_name, qttr_value, default_role")
         .is("deleted_at", null)
         .order("last_name", { ascending: true });
 
@@ -97,7 +97,8 @@ export const ActivePlayersList = () => {
 
       profileRows.forEach((profile) => {
         const userRoles = new Set<AppRole>();
-        const rolesForUser = profile.user_id ? rolesByUser.get(profile.user_id) : undefined;
+        // Note: profile.id is the user_id (references auth.users)
+        const rolesForUser = rolesByUser.get(profile.id);
 
         rolesForUser?.forEach((role) => userRoles.add(role));
 
@@ -105,18 +106,17 @@ export const ActivePlayersList = () => {
           userRoles.add(profile.default_role as AppRole);
         }
 
-        if (!userRoles.has("player")) {
+        if (!userRoles.has("member")) {
           return;
         }
 
-        const targetList = userRoles.has("jugend") ? youth : adults;
+        const targetList = userRoles.has("trainer") ? youth : adults;
 
         targetList.push({
           id: profile.id,
           first_name: profile.first_name,
           last_name: profile.last_name,
           qttr_value: profile.qttr_value,
-          user_id: profile.user_id,
         });
       });
 

@@ -182,29 +182,71 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          birthday: string | null
+          city: string | null
           created_at: string
+          default_role: string | null
+          deleted_at: string | null
           email: string | null
+          first_name: string | null
           full_name: string | null
           id: string
+          last_name: string | null
+          member_number: string | null
+          member_since: string | null
+          mobile: string | null
           phone: string | null
+          photo_url: string | null
+          postal_code: string | null
+          qttr_value: number | null
+          status: string | null
+          street: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          birthday?: string | null
+          city?: string | null
           created_at?: string
+          default_role?: string | null
+          deleted_at?: string | null
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id: string
+          last_name?: string | null
+          member_number?: string | null
+          member_since?: string | null
+          mobile?: string | null
           phone?: string | null
+          photo_url?: string | null
+          postal_code?: string | null
+          qttr_value?: number | null
+          status?: string | null
+          street?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          birthday?: string | null
+          city?: string | null
           created_at?: string
+          default_role?: string | null
+          deleted_at?: string | null
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          last_name?: string | null
+          member_number?: string | null
+          member_since?: string | null
+          mobile?: string | null
           phone?: string | null
+          photo_url?: string | null
+          postal_code?: string | null
+          qttr_value?: number | null
+          status?: string | null
+          street?: string | null
           updated_at?: string
         }
         Relationships: []

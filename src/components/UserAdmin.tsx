@@ -20,8 +20,7 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 import type { ManualMemberRequest, ManualMemberResponse } from "@/types/manual-member";
 
 type UserProfile = {
-  id: string;
-  user_id: string | null;
+  id: string; // This is the user_id (references auth.users)
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -305,10 +304,11 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
       
       if (rolesError) throw rolesError;
 
-      // Combine profiles with their roles, using type assertion for new fields
+      // Combine profiles with their roles
+      // Note: profile.id is the user_id (it references auth.users)
       const usersWithRoles = (profilesData || []).map(profile => ({
-        ...(profile as any), // Type assertion due to pending Supabase types refresh
-        user_roles: (rolesData || []).filter(role => role.user_id === profile.user_id)
+        ...profile,
+        user_roles: (rolesData || []).filter(role => role.user_id === profile.id)
       })) as UserProfile[];
 
       setUsers(usersWithRoles);
@@ -436,7 +436,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
   }, [initialTeamAssignments, teamAssignments]);
 
   const handleSaveTeamAssignments = async () => {
-    if (!selectedUser?.user_id) {
+    if (!selectedUser?.id) {
       toast({
         title: "Keine Benutzer-ID",
         description: "Mannschaften können erst zugeordnet werden, wenn dem Profil ein Benutzerkonto zugewiesen ist.",
@@ -481,7 +481,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
           .upsert(
             toAdd.map((teamId) => ({
               team_id: teamId,
-              member_id: selectedUser.user_id as string,
+              member_id: selectedUser.id,
               is_captain: false
             })),
             { onConflict: 'team_id,member_id' }
@@ -494,7 +494,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
         const { error: deleteError } = await supabase
           .from('team_members')
           .delete()
-          .eq('member_id', selectedUser.user_id as string)
+          .eq('member_id', selectedUser.id)
           .in('team_id', toRemove);
 
         if (deleteError) throw deleteError;
@@ -512,7 +512,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
         });
       }
 
-      await loadTeamsForUser(selectedUser.user_id as string);
+      await loadTeamsForUser(selectedUser.id);
       window.dispatchEvent(new Event(TEAM_UPDATE_EVENT));
     } catch (error) {
       console.error('Error saving team assignments:', error);
@@ -691,7 +691,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
   const getUserRoles = (user: UserProfile): NormalizedRole[] => {
     const normalized = (user.user_roles || []).map(role => normalizeRole(role.role as AppRole));
 
-    if ((!user.user_id || normalized.length === 0) && user.default_role) {
+    if ((!user.id || normalized.length === 0) && user.default_role) {
       normalized.push(normalizeRole(user.default_role as AppRole));
     }
 
@@ -789,7 +789,7 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
             case "profile_id":
               return user.id;
             case "user_id":
-              return user.user_id ?? "";
+              return user.id;
             case "first_name":
               return user.first_name ?? "";
             case "last_name":
@@ -1133,8 +1133,8 @@ export const UserAdmin = ({ onNavigateToMemberUpdate }: UserAdminProps) => {
         status: user.status || "pending",
         qttr_value: typeof user.qttr_value === "number" ? String(user.qttr_value) : ""
       });
-      if (user.user_id) {
-        loadTeamsForUser(user.user_id);
+      if (user.id) {
+        loadTeamsForUser(user.id);
       } else {
         resetTeamState();
       }
