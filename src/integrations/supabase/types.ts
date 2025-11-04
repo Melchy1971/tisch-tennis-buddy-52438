@@ -210,6 +210,33 @@ export type Database = {
         }
         Relationships: []
       }
+      club_halls: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          hall_number: number | null
+          id: string
+          name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          hall_number?: number | null
+          id?: string
+          name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          hall_number?: number | null
+          id?: string
+          name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       club_settings: {
         Row: {
           address: string | null
@@ -300,6 +327,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       matches: {
         Row: {
           away_score: number | null
@@ -315,6 +372,7 @@ export type Database = {
           match_date: string
           opponent: string
           result: string | null
+          status: string | null
           team: string | null
           team_id: string
           time: string | null
@@ -334,6 +392,7 @@ export type Database = {
           match_date: string
           opponent: string
           result?: string | null
+          status?: string | null
           team?: string | null
           team_id: string
           time?: string | null
@@ -353,6 +412,7 @@ export type Database = {
           match_date?: string
           opponent?: string
           result?: string | null
+          status?: string | null
           team?: string | null
           team_id?: string
           time?: string | null
@@ -475,6 +535,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean | null
+          member_id: string | null
           position: number | null
           team_id: string
           user_id: string
@@ -483,6 +544,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean | null
+          member_id?: string | null
           position?: number | null
           team_id: string
           user_id: string
@@ -491,6 +553,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean | null
+          member_id?: string | null
           position?: number | null
           team_id?: string
           user_id?: string
