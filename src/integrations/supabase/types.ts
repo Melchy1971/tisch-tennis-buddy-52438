@@ -357,6 +357,79 @@ export type Database = {
         }
         Relationships: []
       }
+      match_availability: {
+        Row: {
+          created_at: string | null
+          id: string
+          match_id: string
+          notes: string | null
+          player_id: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          match_id: string
+          notes?: string | null
+          player_id: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          match_id?: string
+          notes?: string | null
+          player_id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_availability_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_pins: {
+        Row: {
+          created_at: string | null
+          id: string
+          match_id: string
+          spielpartie_pin: string | null
+          spielpin: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          match_id: string
+          spielpartie_pin?: string | null
+          spielpin?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          match_id?: string
+          spielpartie_pin?: string | null
+          spielpin?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_pins_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: true
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matches: {
         Row: {
           away_score: number | null
@@ -571,6 +644,66 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_substitute_requests: {
+        Row: {
+          archived: boolean | null
+          created_at: string | null
+          id: string
+          marked_by: string | null
+          match_id: string | null
+          needs_substitute: boolean | null
+          notes: string | null
+          player_id: string
+          team_id: string | null
+          team_name: string | null
+          updated_at: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          archived?: boolean | null
+          created_at?: string | null
+          id?: string
+          marked_by?: string | null
+          match_id?: string | null
+          needs_substitute?: boolean | null
+          notes?: string | null
+          player_id: string
+          team_id?: string | null
+          team_name?: string | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          archived?: boolean | null
+          created_at?: string | null
+          id?: string
+          marked_by?: string | null
+          match_id?: string | null
+          needs_substitute?: boolean | null
+          notes?: string | null
+          player_id?: string
+          team_id?: string | null
+          team_name?: string | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_substitute_requests_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_substitute_requests_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
