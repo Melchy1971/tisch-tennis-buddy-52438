@@ -255,6 +255,7 @@ export type Database = {
           logo_url: string | null
           primary_color: string
           secondary_color: string
+          show_feedback_section: boolean | null
           updated_at: string
           website: string | null
         }
@@ -275,6 +276,7 @@ export type Database = {
           logo_url?: string | null
           primary_color?: string
           secondary_color?: string
+          show_feedback_section?: boolean | null
           updated_at?: string
           website?: string | null
         }
@@ -295,6 +297,7 @@ export type Database = {
           logo_url?: string | null
           primary_color?: string
           secondary_color?: string
+          show_feedback_section?: boolean | null
           updated_at?: string
           website?: string | null
         }
@@ -521,6 +524,7 @@ export type Database = {
           photo_url: string | null
           postal_code: string | null
           qttr_value: number | null
+          requires_password_change: boolean | null
           status: string | null
           street: string | null
           updated_at: string
@@ -544,6 +548,7 @@ export type Database = {
           photo_url?: string | null
           postal_code?: string | null
           qttr_value?: number | null
+          requires_password_change?: boolean | null
           status?: string | null
           street?: string | null
           updated_at?: string
@@ -567,6 +572,7 @@ export type Database = {
           photo_url?: string | null
           postal_code?: string | null
           qttr_value?: number | null
+          requires_password_change?: boolean | null
           status?: string | null
           street?: string | null
           updated_at?: string
@@ -785,7 +791,21 @@ export type Database = {
       is_admin_or_board: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "board_member" | "trainer" | "member"
+      app_role:
+        | "admin"
+        | "board_member"
+        | "trainer"
+        | "member"
+        | "vorstand"
+        | "mannschaftsfuehrer"
+        | "player"
+        | "mitglied"
+        | "moderator"
+        | "damen"
+        | "senioren"
+        | "jugend"
+        | "volleyball"
+        | "entwickler"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -913,7 +933,22 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "board_member", "trainer", "member"],
+      app_role: [
+        "admin",
+        "board_member",
+        "trainer",
+        "member",
+        "vorstand",
+        "mannschaftsfuehrer",
+        "player",
+        "mitglied",
+        "moderator",
+        "damen",
+        "senioren",
+        "jugend",
+        "volleyball",
+        "entwickler",
+      ],
     },
   },
 } as const
