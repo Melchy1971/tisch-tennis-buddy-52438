@@ -93,6 +93,111 @@ export type Database = {
           },
         ]
       }
+      board_flyers: {
+        Row: {
+          author_id: string
+          content: string | null
+          created_at: string | null
+          id: string
+          image_name: string | null
+          image_path: string | null
+          image_size: number | null
+          image_type: string | null
+          image_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_name?: string | null
+          image_path?: string | null
+          image_size?: number | null
+          image_type?: string | null
+          image_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_name?: string | null
+          image_path?: string | null
+          image_size?: number | null
+          image_type?: string | null
+          image_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      board_messages: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string | null
+          id: string
+          is_urgent: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          is_urgent?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_urgent?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      club_events: {
+        Row: {
+          author_id: string
+          created_at: string | null
+          description: string | null
+          event_date: string
+          id: string
+          location: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          created_at?: string | null
+          description?: string | null
+          event_date: string
+          id?: string
+          location?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          created_at?: string | null
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       club_settings: {
         Row: {
           address: string | null
@@ -132,6 +237,33 @@ export type Database = {
           secondary_color?: string
           updated_at?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      email_distribution_lists: {
+        Row: {
+          created_at: string | null
+          groups: Json | null
+          id: string
+          manual_emails: string[] | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          groups?: Json | null
+          id?: string
+          manual_emails?: string[] | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          groups?: Json | null
+          id?: string
+          manual_emails?: string[] | null
+          name?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
