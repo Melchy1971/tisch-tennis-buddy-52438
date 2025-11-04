@@ -103,9 +103,11 @@ export const AdminTransfer = () => {
 
       const hasRoles = existingRoles?.map(r => r.role) || [];
 
-      // Roles to assign (all except mannschaftsfuehrer which must be set manually)
-      type AppRole = 'admin' | 'vorstand' | 'moderator' | 'player' | 'mannschaftsfuehrer' | 'substitute';
-      const rolesToAssign: AppRole[] = ['admin', 'vorstand', 'moderator', 'player'];
+      // Import the database AppRole type
+      type AppRole = 'admin' | 'board_member' | 'member' | 'trainer';
+      
+      // Roles to assign to new admin
+      const rolesToAssign: AppRole[] = ['admin', 'board_member', 'member'];
 
       // Add missing roles
       const rolesToAdd = rolesToAssign.filter(role => !hasRoles.includes(role));
@@ -116,7 +118,7 @@ export const AdminTransfer = () => {
           .insert(
             rolesToAdd.map(role => ({
               user_id: selectedUserId,
-              role: role as AppRole
+              role: role
             }))
           );
 
@@ -234,7 +236,7 @@ export const AdminTransfer = () => {
               <CheckCircle className="h-4 w-4" />
               <AlertDescription>
                 <strong>{getDisplayName(profiles.find(p => p.id === selectedUserId)!)}</strong> wird 
-                die folgenden Rollen erhalten: Administrator, Vorstand, Moderator, Spieler
+                die folgenden Rollen erhalten: Administrator, Vorstandsmitglied, Mitglied
               </AlertDescription>
             </Alert>
           )}
