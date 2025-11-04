@@ -26,7 +26,7 @@ export const DeveloperProfile = () => {
       // Fetch profile with entwickler role
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('user_id, email, first_name, last_name, created_at')
+        .select('id, email, first_name, last_name, created_at')
         .eq('email', 'mdickscheit@gmail.com')
         .single();
 

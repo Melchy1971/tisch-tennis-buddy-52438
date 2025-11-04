@@ -58,6 +58,10 @@ export type Database = {
           category: string | null
           content: string | null
           created_at: string
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          file_type: string | null
           id: string
           is_published: boolean | null
           title: string
@@ -68,6 +72,10 @@ export type Database = {
           category?: string | null
           content?: string | null
           created_at?: string
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
           id?: string
           is_published?: boolean | null
           title: string
@@ -78,6 +86,10 @@ export type Database = {
           category?: string | null
           content?: string | null
           created_at?: string
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
           id?: string
           is_published?: boolean | null
           title?: string
@@ -205,6 +217,13 @@ export type Database = {
           contact_email: string | null
           contact_phone: string | null
           created_at: string
+          email_from_address: string | null
+          email_provider_type: string | null
+          email_smtp_password: string | null
+          email_smtp_port: number | null
+          email_smtp_server: string | null
+          email_smtp_use_tls: boolean | null
+          email_smtp_username: string | null
           id: string
           logo_url: string | null
           primary_color: string
@@ -218,6 +237,13 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          email_from_address?: string | null
+          email_provider_type?: string | null
+          email_smtp_password?: string | null
+          email_smtp_port?: number | null
+          email_smtp_server?: string | null
+          email_smtp_use_tls?: boolean | null
+          email_smtp_username?: string | null
           id?: string
           logo_url?: string | null
           primary_color?: string
@@ -231,6 +257,13 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          email_from_address?: string | null
+          email_provider_type?: string | null
+          email_smtp_password?: string | null
+          email_smtp_port?: number | null
+          email_smtp_server?: string | null
+          email_smtp_use_tls?: boolean | null
+          email_smtp_username?: string | null
           id?: string
           logo_url?: string | null
           primary_color?: string
@@ -269,36 +302,60 @@ export type Database = {
       }
       matches: {
         Row: {
+          away_score: number | null
+          away_team: string | null
+          club_team: string | null
           created_at: string
+          date: string | null
           home_away: string | null
+          home_score: number | null
+          home_team: string | null
           id: string
           location: string | null
           match_date: string
           opponent: string
           result: string | null
+          team: string | null
           team_id: string
+          time: string | null
           updated_at: string
         }
         Insert: {
+          away_score?: number | null
+          away_team?: string | null
+          club_team?: string | null
           created_at?: string
+          date?: string | null
           home_away?: string | null
+          home_score?: number | null
+          home_team?: string | null
           id?: string
           location?: string | null
           match_date: string
           opponent: string
           result?: string | null
+          team?: string | null
           team_id: string
+          time?: string | null
           updated_at?: string
         }
         Update: {
+          away_score?: number | null
+          away_team?: string | null
+          club_team?: string | null
           created_at?: string
+          date?: string | null
           home_away?: string | null
+          home_score?: number | null
+          home_team?: string | null
           id?: string
           location?: string | null
           match_date?: string
           opponent?: string
           result?: string | null
+          team?: string | null
           team_id?: string
+          time?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -383,6 +440,36 @@ export type Database = {
         }
         Relationships: []
       }
+      seasons: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          is_current: boolean | null
+          name: string
+          start_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id: string
+          is_current?: boolean | null
+          name: string
+          start_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean | null
+          name?: string
+          start_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           created_at: string
@@ -433,6 +520,7 @@ export type Database = {
           league: string | null
           name: string
           season: string | null
+          season_id: string | null
           updated_at: string
         }
         Insert: {
@@ -442,6 +530,7 @@ export type Database = {
           league?: string | null
           name: string
           season?: string | null
+          season_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -451,6 +540,7 @@ export type Database = {
           league?: string | null
           name?: string
           season?: string | null
+          season_id?: string | null
           updated_at?: string
         }
         Relationships: [
