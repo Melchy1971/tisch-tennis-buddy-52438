@@ -47,15 +47,16 @@ export const MatchLineup = ({ match, open, onOpenChange }: MatchLineupProps) => 
   const getCurrentUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+      // profiles.id IS the user_id (it references auth.users.id)
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, user_id")
-        .eq("user_id", user.id)
+        .select("id")
+        .eq("id", user.id)
         .maybeSingle();
       
       if (profile) {
-        setCurrentUserId(profile.user_id);
-        console.log("Current user ID set:", profile.user_id);
+        setCurrentUserId(profile.id);
+        console.log("Current user ID set:", profile.id);
       } else {
         console.warn("No profile found for user");
       }
