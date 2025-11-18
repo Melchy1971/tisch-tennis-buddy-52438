@@ -851,36 +851,42 @@ export type Database = {
           captain_id: string | null
           category: string | null
           created_at: string
+          division: string | null
           home_match: string | null
           id: string
           league: string | null
           name: string
           season: string | null
           season_id: string | null
+          training_slots: Json | null
           updated_at: string
         }
         Insert: {
           captain_id?: string | null
           category?: string | null
           created_at?: string
+          division?: string | null
           home_match?: string | null
           id?: string
           league?: string | null
           name: string
           season?: string | null
           season_id?: string | null
+          training_slots?: Json | null
           updated_at?: string
         }
         Update: {
           captain_id?: string | null
           category?: string | null
           created_at?: string
+          division?: string | null
           home_match?: string | null
           id?: string
           league?: string | null
           name?: string
           season?: string | null
           season_id?: string | null
+          training_slots?: Json | null
           updated_at?: string
         }
         Relationships: [
@@ -889,6 +895,54 @@ export type Database = {
             columns: ["captain_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_sessions: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          location: string | null
+          notes: string | null
+          session_date: string
+          team_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          session_date: string
+          team_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          session_date?: string
+          team_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_sessions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_sessions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
