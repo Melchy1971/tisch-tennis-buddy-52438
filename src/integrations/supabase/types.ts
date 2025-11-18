@@ -504,6 +504,36 @@ export type Database = {
           },
         ]
       }
+      pin_import_logs: {
+        Row: {
+          created_at: string | null
+          errors_count: number | null
+          file_name: string | null
+          id: string
+          import_date: string | null
+          imported_by: string
+          pins_imported: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          errors_count?: number | null
+          file_name?: string | null
+          id?: string
+          import_date?: string | null
+          imported_by: string
+          pins_imported?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          errors_count?: number | null
+          file_name?: string | null
+          id?: string
+          import_date?: string | null
+          imported_by?: string
+          pins_imported?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -654,6 +684,71 @@ export type Database = {
           },
         ]
       }
+      team_substitute_assignments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          request_id: string | null
+          requested_by: string | null
+          status: string | null
+          substitute_player_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          request_id?: string | null
+          requested_by?: string | null
+          status?: string | null
+          substitute_player_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          request_id?: string | null
+          requested_by?: string | null
+          status?: string | null
+          substitute_player_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_substitute_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_substitute_assignments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "team_substitute_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_substitute_assignments_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_substitute_assignments_substitute_player_id_fkey"
+            columns: ["substitute_player_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_substitute_requests: {
         Row: {
           archived: boolean | null
@@ -789,6 +884,12 @@ export type Database = {
         Returns: boolean
       }
       is_admin_or_board: { Args: { _user_id: string }; Returns: boolean }
+      permanently_delete_profile: {
+        Args: { profile_id: string }
+        Returns: undefined
+      }
+      restore_profile: { Args: { profile_id: string }; Returns: undefined }
+      soft_delete_profile: { Args: { profile_id: string }; Returns: undefined }
     }
     Enums: {
       app_role:

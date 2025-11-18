@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 
 interface Profile {
   id: string;
-  user_id: string;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -63,8 +62,8 @@ export const ProfileMerge = () => {
       setPrimaryProfile(profile || null);
       if (profile) {
         setMergedData({ ...profile });
-        loadRoles(profile.user_id, setPrimaryRoles);
-        loadTeamAssignments(profile.user_id, setPrimaryTeamAssignments);
+        loadRoles(profile.id, setPrimaryRoles);
+        loadTeamAssignments(profile.id, setPrimaryTeamAssignments);
       }
     }
   }, [primaryProfileId, profiles]);
@@ -74,8 +73,8 @@ export const ProfileMerge = () => {
       const profile = profiles.find(p => p.id === secondaryProfileId);
       setSecondaryProfile(profile || null);
       if (profile) {
-        loadRoles(profile.user_id, setSecondaryRoles);
-        loadTeamAssignments(profile.user_id, setSecondaryTeamAssignments);
+        loadRoles(profile.id, setSecondaryRoles);
+        loadTeamAssignments(profile.id, setSecondaryTeamAssignments);
       }
     }
   }, [secondaryProfileId, profiles]);
@@ -203,7 +202,7 @@ export const ProfileMerge = () => {
           const { error: roleError } = await supabase
             .from("user_roles")
             .insert([{
-              user_id: primaryProfile.user_id,
+              user_id: primaryProfile.id,
               role: role as any
             }]);
           
@@ -220,13 +219,12 @@ export const ProfileMerge = () => {
         );
         
         for (const assignment of assignmentsToAdd) {
-          const { error: teamError } = await supabase
+          const { error: teamError} = await supabase
             .from("team_members")
             .insert([{
               team_id: assignment.team_id,
-              member_id: primaryProfile.user_id,
-              is_captain: assignment.is_captain,
-              position: assignment.position
+              user_id: primaryProfile.id,
+              position: typeof assignment.position === 'string' ? parseInt(assignment.position) : assignment.position
             }]);
           
           if (teamError) {
