@@ -5,8 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PasswordChangeDialog } from "@/components/PasswordChangeDialog";
 import { BreakpointProvider } from "@/providers/BreakpointProvider";
+import { CookieConsent } from "@/components/CookieConsent";
+import { SkipToContent } from "@/components/SkipToContent";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Datenschutz from "./pages/Datenschutz";
+import Impressum from "./pages/Impressum";
 import TeamManagementPreview from "./pages/TeamManagementPreview";
 import CommunicationPreview from "./pages/CommunicationPreview";
 import TeamOverviewPreview from "./pages/TeamOverviewPreview";
@@ -23,9 +27,12 @@ const App = () => (
       <PasswordChangeDialog />
       <BreakpointProvider>
         <BrowserRouter>
+          <SkipToContent />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Index />} />
+            <Route path="/datenschutz" element={<Datenschutz />} />
+            <Route path="/impressum" element={<Impressum />} />
             <Route path="/preview/teams" element={<TeamManagementPreview />} />
             <Route path="/preview/communication" element={<CommunicationPreview />} />
             <Route path="/preview/team-overview" element={<TeamOverviewPreview />} />
@@ -34,6 +41,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <CookieConsent />
         </BrowserRouter>
       </BreakpointProvider>
     </TooltipProvider>
