@@ -134,7 +134,7 @@ export const SubstituteManager = () => {
       
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, user_id, first_name, last_name")
+        .select("id, first_name, last_name")
         .in("id", playerIds);
 
       if (profilesError) {
@@ -222,18 +222,18 @@ export const SubstituteManager = () => {
         // Load all profiles at once
         const { data: allProfiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("user_id, first_name, last_name")
-          .in("user_id", allPlayerIds);
+          .select("id, first_name, last_name")
+          .in("id", allPlayerIds);
 
         if (profilesError) throw profilesError;
 
         // Helper to create assignment with profiles
         const createAssignmentWithProfiles = (assignment: any): SubstituteAssignment => {
-          const substituteProfile = allProfiles?.find(p => p.user_id === assignment.substitute_player_id);
+          const substituteProfile = allProfiles?.find(p => p.id === assignment.substitute_player_id);
           
           // Find the original request to get player_id
           const request = requestsData?.find(r => r.team_name === assignment.team_name);
-          const requestProfile = allProfiles?.find(p => p.user_id === request?.player_id);
+          const requestProfile = allProfiles?.find(p => p.id === request?.player_id);
           
           return {
             id: assignment.id,

@@ -60,7 +60,7 @@ export const MatchSchedule = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState<Match[]>([]);
   const [importedMatches, setImportedMatches] = useState<Match[]>([]);
-  const [dbTeams, setDbTeams] = useState<Array<{ name: string; category: string }>>([]);
+  const [dbTeams, setDbTeams] = useState<Array<{ name: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>("");
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
@@ -115,7 +115,7 @@ export const MatchSchedule = () => {
 
       if (seasonsError) throw seasonsError;
 
-      let query = supabase.from("teams").select("name, category");
+      let query = supabase.from("teams").select("name");
 
       if (currentSeasons && currentSeasons.length > 0) {
         const seasonIds = currentSeasons.map(s => s.id);
@@ -125,7 +125,7 @@ export const MatchSchedule = () => {
       const { data, error } = await query.order("name", { ascending: true });
 
       if (error) throw error;
-      setDbTeams((data || []).map(t => ({ name: t.name, category: t.category })));
+      setDbTeams((data || []).map(t => ({ name: t.name })));
     } catch (error) {
       console.error("Error loading teams from database:", error);
     }

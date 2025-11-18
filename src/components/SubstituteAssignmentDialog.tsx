@@ -25,7 +25,7 @@ interface Team {
 }
 
 interface Player {
-  user_id: string;
+  id: string;
   first_name: string;
   last_name: string;
 }
@@ -134,8 +134,8 @@ export const SubstituteAssignmentDialog = ({
         if (memberIds.length > 0) {
           const { data: profilesData, error: profilesError } = await supabase
             .from("profiles")
-            .select("user_id, first_name, last_name")
-            .in("user_id", memberIds)
+            .select("id, first_name, last_name")
+            .in("id", memberIds)
             .order("last_name", { ascending: true });
 
           if (profilesError) throw profilesError;
@@ -277,7 +277,7 @@ export const SubstituteAssignmentDialog = ({
                 </SelectTrigger>
                 <SelectContent>
                   {players.map((player) => (
-                    <SelectItem key={player.user_id} value={player.user_id}>
+                    <SelectItem key={player.id} value={player.id}>
                       {player.first_name} {player.last_name}
                     </SelectItem>
                   ))}

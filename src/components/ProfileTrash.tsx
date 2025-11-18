@@ -9,7 +9,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 interface DeletedProfile {
   id: string;
-  user_id: string;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -27,7 +26,7 @@ export const ProfileTrash = () => {
   const loadDeletedProfiles = async () => {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, user_id, first_name, last_name, email, deleted_at")
+      .select("id, first_name, last_name, email, deleted_at")
       .not("deleted_at", "is", null)
       .order("deleted_at", { ascending: false });
 
