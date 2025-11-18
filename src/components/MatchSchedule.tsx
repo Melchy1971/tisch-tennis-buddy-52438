@@ -60,7 +60,7 @@ export const MatchSchedule = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState<Match[]>([]);
   const [importedMatches, setImportedMatches] = useState<Match[]>([]);
-  const [dbTeams, setDbTeams] = useState<Array<{ name: string }>>([]);
+  const [dbTeams, setDbTeams] = useState<Array<{ id: string; name: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>("");
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
@@ -115,7 +115,7 @@ export const MatchSchedule = () => {
 
       if (seasonsError) throw seasonsError;
 
-      let query = supabase.from("teams").select("name");
+      let query = supabase.from("teams").select("id, name");
 
       if (currentSeasons && currentSeasons.length > 0) {
         const seasonIds = currentSeasons.map(s => s.id);
@@ -125,7 +125,7 @@ export const MatchSchedule = () => {
       const { data, error } = await query.order("name", { ascending: true });
 
       if (error) throw error;
-      setDbTeams((data || []).map(t => ({ name: t.name })));
+      setDbTeams(data || []);
     } catch (error) {
       console.error("Error loading teams from database:", error);
     }
@@ -342,9 +342,15 @@ export const MatchSchedule = () => {
       
       if (isIcsMatch) {
         // For ICS matches, create a new match in Supabase with the result
+        // Find the team_id from dbTeams
+        const teamMatch = dbTeams.find(t => t.name === (resultMatch.home_team ?? resultMatch.team));
+        const team_id = teamMatch?.id || "00000000-0000-0000-0000-000000000000";
+        
         const { error } = await supabase
           .from("matches")
           .insert([{ 
+            team_id: team_id,
+            match_date: `${resultMatch.date}T${resultMatch.time || "00:00"}:00`,
             team: resultMatch.home_team ?? resultMatch.team,
             opponent: resultMatch.away_team ?? resultMatch.opponent,
             date: resultMatch.date,
@@ -457,9 +463,15 @@ export const MatchSchedule = () => {
         });
       } else {
         // Create new match (either new or converted from ICS)
+        // Find the team_id from dbTeams
+        const teamMatch = dbTeams.find(t => t.name === matchForm.team);
+        const team_id = teamMatch?.id || "00000000-0000-0000-0000-000000000000";
+        
         const { error } = await supabase
           .from("matches")
           .insert([{ 
+            team_id: team_id,
+            match_date: `${matchForm.date}T${matchForm.time}:00`,
             team: matchForm.team,
             opponent: matchForm.opponent,
             date: matchForm.date,
@@ -730,16 +742,9 @@ export const MatchSchedule = () => {
   }, [sortedAllMatches]);
 
   const teams = useMemo(() => {
-    // Sort by category (erwachsene first, then jugend) and then alphabetically within each category
+    // Sort alphabetically by name
     return dbTeams
-      .sort((a, b) => {
-        // Sort by category first
-        if (a.category !== b.category) {
-          return a.category === "erwachsene" ? -1 : 1;
-        }
-        // Then sort alphabetically by name
-        return a.name.localeCompare(b.name, "de-DE");
-      })
+      .sort((a, b) => a.name.localeCompare(b.name, "de-DE"))
       .map(t => t.name);
   }, [dbTeams]);
 

@@ -611,30 +611,45 @@ export type Database = {
       }
       seasons: {
         Row: {
+          category: string | null
           created_at: string | null
           end_date: string | null
+          end_year: number | null
           id: string
+          is_archived: boolean | null
           is_current: boolean | null
+          label: string | null
           name: string
           start_date: string | null
+          start_year: number | null
           updated_at: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           end_date?: string | null
+          end_year?: number | null
           id: string
+          is_archived?: boolean | null
           is_current?: boolean | null
+          label?: string | null
           name: string
           start_date?: string | null
+          start_year?: number | null
           updated_at?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           end_date?: string | null
+          end_year?: number | null
           id?: string
+          is_archived?: boolean | null
           is_current?: boolean | null
+          label?: string | null
           name?: string
           start_date?: string | null
+          start_year?: number | null
           updated_at?: string | null
         }
         Relationships: []
@@ -644,6 +659,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean | null
+          is_captain: boolean | null
           member_id: string | null
           position: number | null
           team_id: string
@@ -653,6 +669,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean | null
+          is_captain?: boolean | null
           member_id?: string | null
           position?: number | null
           team_id: string
@@ -662,6 +679,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean | null
+          is_captain?: boolean | null
           member_id?: string | null
           position?: number | null
           team_id?: string
@@ -686,6 +704,8 @@ export type Database = {
       }
       team_substitute_assignments: {
         Row: {
+          approved_by: string | null
+          archived: boolean | null
           assigned_by: string | null
           created_at: string | null
           id: string
@@ -694,9 +714,13 @@ export type Database = {
           requested_by: string | null
           status: string | null
           substitute_player_id: string
+          substitute_team_name: string | null
+          team_name: string | null
           updated_at: string | null
         }
         Insert: {
+          approved_by?: string | null
+          archived?: boolean | null
           assigned_by?: string | null
           created_at?: string | null
           id?: string
@@ -705,9 +729,13 @@ export type Database = {
           requested_by?: string | null
           status?: string | null
           substitute_player_id: string
+          substitute_team_name?: string | null
+          team_name?: string | null
           updated_at?: string | null
         }
         Update: {
+          approved_by?: string | null
+          archived?: boolean | null
           assigned_by?: string | null
           created_at?: string | null
           id?: string
@@ -716,9 +744,18 @@ export type Database = {
           requested_by?: string | null
           status?: string | null
           substitute_player_id?: string
+          substitute_team_name?: string | null
+          team_name?: string | null
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "team_substitute_assignments_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "team_substitute_assignments_assigned_by_fkey"
             columns: ["assigned_by"]
@@ -812,7 +849,9 @@ export type Database = {
       teams: {
         Row: {
           captain_id: string | null
+          category: string | null
           created_at: string
+          home_match: string | null
           id: string
           league: string | null
           name: string
@@ -822,7 +861,9 @@ export type Database = {
         }
         Insert: {
           captain_id?: string | null
+          category?: string | null
           created_at?: string
+          home_match?: string | null
           id?: string
           league?: string | null
           name: string
@@ -832,7 +873,9 @@ export type Database = {
         }
         Update: {
           captain_id?: string | null
+          category?: string | null
           created_at?: string
+          home_match?: string | null
           id?: string
           league?: string | null
           name?: string

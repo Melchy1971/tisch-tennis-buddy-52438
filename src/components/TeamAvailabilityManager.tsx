@@ -127,12 +127,12 @@ export const TeamAvailabilityManager = () => {
         if (memberIds.length > 0) {
           const { data: profilesData, error: profilesError } = await supabase
             .from("profiles")
-            .select("user_id, first_name, last_name")
-            .in("user_id", memberIds)
+            .select("id, first_name, last_name")
+            .in("id", memberIds)
             .order("last_name", { ascending: true });
 
           if (profilesError) throw profilesError;
-          setTeamMembers(profilesData || []);
+          setTeamMembers((profilesData || []).map(p => ({ ...p, user_id: p.id })));
 
           // Load existing substitute requests
           const { data: requestsData, error: requestsError } = await supabase

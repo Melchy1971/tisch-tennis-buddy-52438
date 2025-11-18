@@ -110,7 +110,7 @@ export const PinsImport = () => {
 
         if (seasonsError) throw seasonsError;
 
-        let teamQuery = supabase.from("teams").select("name, category");
+        let teamQuery = supabase.from("teams").select("name");
 
         if (currentSeasons && currentSeasons.length > 0) {
           const seasonIds = currentSeasons.map((season) => season.id);
@@ -124,7 +124,7 @@ export const PinsImport = () => {
         setTeams(
           (teamData || []).map((team) => ({
             name: team.name,
-            category: (team.category ?? null) as TeamOption["category"],
+            category: null as TeamOption["category"],
           }))
         );
 
