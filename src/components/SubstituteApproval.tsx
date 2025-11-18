@@ -101,8 +101,8 @@ export const SubstituteApproval = ({ onStatusChange }: SubstituteApprovalProps) 
       const substitutePlayerIds = assignmentsData.map(a => a.substitute_player_id);
       const { data: substituteProfiles, error: substituteError } = await supabase
         .from("profiles")
-        .select("user_id, first_name, last_name")
-        .in("user_id", substitutePlayerIds);
+        .select("id, first_name, last_name")
+        .in("id", substitutePlayerIds);
 
       if (substituteError) throw substituteError;
 
@@ -110,15 +110,15 @@ export const SubstituteApproval = ({ onStatusChange }: SubstituteApprovalProps) 
       const requesterIds = assignmentsData.map(a => a.requested_by);
       const { data: requesterProfiles, error: requesterError } = await supabase
         .from("profiles")
-        .select("user_id, first_name, last_name")
-        .in("user_id", requesterIds);
+        .select("id, first_name, last_name")
+        .in("id", requesterIds);
 
       if (requesterError) throw requesterError;
 
       // Merge the data
       const mergedData = assignmentsData.map(assignment => {
-        const substituteProfile = substituteProfiles?.find(p => p.user_id === assignment.substitute_player_id);
-        const requesterProfile = requesterProfiles?.find(p => p.user_id === assignment.requested_by);
+        const substituteProfile = substituteProfiles?.find(p => p.id === assignment.substitute_player_id);
+        const requesterProfile = requesterProfiles?.find(p => p.id === assignment.requested_by);
         
         return {
           ...assignment,

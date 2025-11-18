@@ -28,7 +28,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 interface Profile {
   id: string;
-  user_id: string;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -64,7 +63,7 @@ export const ProfilesManager = ({ onTabChange }: ProfilesManagerProps) => {
     // Load active profiles
     const { data: active, error: activeError } = await supabase
       .from("profiles")
-      .select("id, user_id, first_name, last_name, email, deleted_at")
+      .select("id, first_name, last_name, email, deleted_at")
       .is("deleted_at", null)
       .order("last_name", { ascending: true });
 
@@ -78,7 +77,7 @@ export const ProfilesManager = ({ onTabChange }: ProfilesManagerProps) => {
     // Load deleted profiles
     const { data: deleted, error: deletedError } = await supabase
       .from("profiles")
-      .select("id, user_id, first_name, last_name, email, deleted_at")
+      .select("id, first_name, last_name, email, deleted_at")
       .not("deleted_at", "is", null)
       .order("deleted_at", { ascending: false });
 

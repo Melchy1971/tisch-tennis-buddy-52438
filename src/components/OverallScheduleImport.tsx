@@ -50,6 +50,8 @@ type ImportResultSummary = {
 };
 
 type MatchInsertPayload = {
+  team_id: string;
+  match_date: string;
   team: string;
   opponent: string;
   date: string;
