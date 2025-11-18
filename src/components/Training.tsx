@@ -44,8 +44,7 @@ export const Training = () => {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
-    member1_id: "",
-    member2_id: "",
+    location: "",
     notes: "",
   });
 
@@ -59,7 +58,7 @@ export const Training = () => {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("user_id, first_name, last_name")
+        .select("id, first_name, last_name")
         .order("last_name", { ascending: true });
 
       if (error) throw error;
@@ -68,7 +67,7 @@ export const Training = () => {
         const membersList = data
           .filter(m => m.first_name && m.last_name)
           .map(m => ({
-            user_id: m.user_id,
+            user_id: m.id,
             first_name: m.first_name,
             last_name: m.last_name,
             full_name: `${m.first_name} ${m.last_name}`
@@ -93,44 +92,34 @@ export const Training = () => {
       const { data: sessionsData, error } = await supabase
         .from("training_sessions")
         .select("*")
-        .order("date", { ascending: true })
-        .order("time", { ascending: true });
+        .order("session_date", { ascending: true });
 
       if (error) throw error;
 
-      // Load creator names and member names
+      // Load creator names
       if (sessionsData) {
         const sessionsWithNames = await Promise.all(
           sessionsData.map(async (session) => {
             const { data: creatorProfile } = await supabase
               .from("profiles")
               .select("first_name, last_name")
-              .eq("user_id", session.created_by)
-              .single();
+              .eq("id", session.created_by)
+              .maybeSingle();
 
-            const { data: member1Profile } = await supabase
-              .from("profiles")
-              .select("first_name, last_name")
-              .eq("user_id", session.member1_id)
-              .single();
-
-            const { data: member2Profile } = await supabase
-              .from("profiles")
-              .select("first_name, last_name")
-              .eq("user_id", session.member2_id)
-              .single();
-
+            const sessionDate = new Date(session.session_date);
+            
             return {
               ...session,
+              date: sessionDate.toISOString().split('T')[0],
+              time: sessionDate.toTimeString().slice(0, 5),
               creator_name: creatorProfile
                 ? `${creatorProfile.first_name} ${creatorProfile.last_name}`
                 : "Unbekannt",
-              member1_name: member1Profile
-                ? `${member1Profile.first_name} ${member1Profile.last_name}`
-                : "Unbekannt",
-              member2_name: member2Profile
-                ? `${member2Profile.first_name} ${member2Profile.last_name}`
-                : "Unbekannt",
+              member1_id: '',
+              member2_id: '',
+              member1_name: '',
+              member2_name: '',
+              participants: []
             };
           })
         );
@@ -152,19 +141,10 @@ export const Training = () => {
   const handleCreateSession = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.member1_id || !formData.member2_id) {
+    if (!formData.date || !formData.time) {
       toast({
         title: "Fehler",
-        description: "Bitte wählen Sie beide Mitglieder aus.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.member1_id === formData.member2_id) {
-      toast({
-        title: "Fehler",
-        description: "Bitte wählen Sie zwei verschiedene Mitglieder aus.",
+        description: "Bitte füllen Sie alle Pflichtfelder aus.",
         variant: "destructive",
       });
       return;
@@ -173,11 +153,11 @@ export const Training = () => {
     setCreating(true);
 
     try {
+      const sessionDateTime = `${formData.date}T${formData.time}:00`;
       const { error } = await supabase.from("training_sessions").insert({
-        date: formData.date,
-        time: formData.time,
-        member1_id: formData.member1_id,
-        member2_id: formData.member2_id,
+        session_date: sessionDateTime,
+        location: formData.location,
+        notes: formData.notes,
         notes: formData.notes,
         created_by: currentUserId,
         participants: [currentUserId],
@@ -190,7 +170,7 @@ export const Training = () => {
         description: "Das Training wurde erfolgreich erstellt.",
       });
 
-      setFormData({ date: "", time: "", member1_id: "", member2_id: "", notes: "" });
+      setFormData({ date: "", time: "", location: "", notes: "" });
       setShowForm(false);
       loadSessions();
     } catch (error) {
@@ -292,44 +272,17 @@ export const Training = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="member1">Mitglied 1</Label>
-                <Select
-                  value={formData.member1_id}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, member1_id: value })
+                <Label htmlFor="location">Ort</Label>
+                <Input
+                  id="location"
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
                   }
-                >
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Mitglied auswählen" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white z-50">
-                    {members.map((member) => (
-                      <SelectItem key={member.user_id} value={member.user_id}>
-                        {member.full_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="member2">Mitglied 2</Label>
-                <Select
-                  value={formData.member2_id}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, member2_id: value })
-                  }
-                >
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Mitglied auswählen" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white z-50">
-                    {members.map((member) => (
-                      <SelectItem key={member.user_id} value={member.user_id}>
-                        {member.full_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  placeholder="z.B. Sporthalle 1"
+                  className="bg-white"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes">Notizen</Label>

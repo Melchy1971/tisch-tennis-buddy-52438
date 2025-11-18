@@ -69,19 +69,19 @@ export const TeamOverview = () => {
 
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
-        .select('user_id, first_name, last_name, email, qttr_value');
+        .select('id, first_name, last_name, email, qttr_value');
 
       if (profilesError) throw profilesError;
 
       const profilesMap = new Map(
         ((profilesData || []) as {
-          user_id: string;
+          id: string;
           first_name: string | null;
           last_name: string | null;
           email: string | null;
           qttr_value: number | null;
         }[]).map(p => [
-          p.user_id,
+          p.id,
           {
             name: `${p.first_name || ''} ${p.last_name || ''}`.trim() || p.email || 'Unbekannt',
             email: p.email || '',

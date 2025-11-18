@@ -19,9 +19,12 @@ export const parseTeamPosition = (position?: string | null) => {
   };
 };
 
-export const compareTeamPositions = (first?: string | null, second?: string | null) => {
-  const firstParsed = parseTeamPosition(first);
-  const secondParsed = parseTeamPosition(second);
+export const compareTeamPositions = (first?: string | number | null, second?: string | number | null) => {
+  // Convert numbers to strings for consistent handling
+  const firstStr = typeof first === 'number' ? String(first) : first;
+  const secondStr = typeof second === 'number' ? String(second) : second;
+  const firstParsed = parseTeamPosition(firstStr);
+  const secondParsed = parseTeamPosition(secondStr);
 
   if (firstParsed.teamOrder !== secondParsed.teamOrder) {
     return firstParsed.teamOrder - secondParsed.teamOrder;

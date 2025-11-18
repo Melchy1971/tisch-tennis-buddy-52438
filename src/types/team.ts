@@ -6,7 +6,7 @@ export type TeamMember = {
   playStyle?: string;
   availability?: string;
   isCaptain?: boolean;
-  position?: string;
+  position?: number;
 };
 
 export type BaseTeamMember = Omit<TeamMember, "isCaptain">;
