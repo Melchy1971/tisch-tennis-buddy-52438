@@ -374,7 +374,7 @@ export const TeamManagement = () => {
     try {
       const { error } = await supabase
         .from("team_members")
-        .update({ position: newPosition })
+        .update({ position: newPosition === "unassigned" ? null : Number(newPosition) })
         .eq("team_id", teamId)
         .eq("member_id", memberId);
 
@@ -612,7 +612,7 @@ export const TeamManagement = () => {
             league: leagueValue,
             division: divisionValue,
             training_slots: trainingSlots,
-            home_match: homeMatch,
+            home_match: homeMatch ? JSON.stringify(homeMatch) : null,
             category: teamForm.category
           })
           .eq("id", editingTeamId);
@@ -628,7 +628,7 @@ export const TeamManagement = () => {
               league: leagueValue,
               division: divisionValue,
               training_slots: trainingSlots,
-              home_match: homeMatch,
+              home_match: homeMatch ? JSON.stringify(homeMatch) : null,
               category: teamForm.category
             }
           ]);
@@ -860,6 +860,7 @@ export const TeamManagement = () => {
           const { error: insertError } = await supabase
             .from("seasons")
             .insert({
+              name: seasonId,
               id: seasonId,
               label: seasonForm.label.trim(),
               start_year: Number(seasonForm.startYear),
@@ -907,11 +908,12 @@ export const TeamManagement = () => {
         }
 
         // Create new season (always active, never archived)
-        // Determine category based on label prefix (E or J)
+        const seasonNameForInsert = seasonId;
         const categoryFromLabel = seasonForm.label.trim().startsWith("J") ? "jugend" : "erwachsene";
         const { error } = await supabase
           .from("seasons")
           .insert({
+            name: seasonId,
             id: seasonId,
             label: seasonForm.label.trim(),
             start_year: Number(seasonForm.startYear),
@@ -1397,14 +1399,14 @@ export const TeamManagement = () => {
                         const teamOrder = teamIndex + 1;
                         const memberKey = `${team.id}-${member.id}`;
                         const isUpdatingPosition = Boolean(positionUpdates[memberKey]);
-                        const currentPositionValue = member.position ?? "unassigned";
+                        const currentPositionValue = member.position != null ? String(member.position) : "unassigned";
                         const basePositionOptions = Array.from({ length: team.members.length }, (_, index) =>
                           buildTeamPosition(teamOrder, index + 1)
                         );
                         const positionOptions = Array.from(
                           new Set([
                             ...basePositionOptions,
-                            ...(member.position ? [member.position] : [])
+                            ...(member.position != null ? [String(member.position)] : [])
                           ])
                         ).sort((a, b) => compareTeamPositions(a, b));
 
@@ -1448,7 +1450,7 @@ export const TeamManagement = () => {
                               <Select
                                 value={currentPositionValue}
                                 onValueChange={(value) =>
-                                  handleUpdateMemberPosition(team.id, member.id, value, member.position)
+                                  handleUpdateMemberPosition(team.id, member.id, value, String(member.position ?? ""))
                                 }
                                 disabled={!isSeasonActive || isUpdatingPosition || !canEditPositions}
                               >
@@ -1458,7 +1460,7 @@ export const TeamManagement = () => {
                                 <SelectContent>
                                   <SelectItem value="unassigned">Keine Position</SelectItem>
                                   {positionOptions.map((positionValue) => (
-                                    <SelectItem key={positionValue} value={positionValue}>
+                                    <SelectItem key={positionValue} value={String(positionValue)}>
                                       {`Position ${positionValue}`}
                                     </SelectItem>
                                   ))}

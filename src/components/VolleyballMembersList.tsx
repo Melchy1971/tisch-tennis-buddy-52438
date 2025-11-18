@@ -26,7 +26,7 @@ type AppRole = Database["public"]["Enums"]["app_role"];
 
 type ProfileSelection = Pick<
   ProfileRow,
-  "id" | "first_name" | "last_name" | "email" | "phone" | "mobile" | "status" | "default_role" | "user_id"
+  "id" | "first_name" | "last_name" | "email" | "phone" | "mobile" | "status" | "default_role"
 >;
 
 export const VolleyballMembersList = () => {
@@ -44,7 +44,7 @@ export const VolleyballMembersList = () => {
     try {
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, first_name, last_name, email, phone, mobile, status, default_role, user_id")
+        .select("id, first_name, last_name, email, phone, mobile, status, default_role")
         .is("deleted_at", null)
         .order("last_name", { ascending: true });
 
@@ -68,7 +68,7 @@ export const VolleyballMembersList = () => {
         .map((profile) => profile as ProfileSelection)
         .filter((profile) => {
           const userRoles = new Set<AppRole>();
-          const rolesForUser = profile.user_id ? rolesByUser.get(profile.user_id) : undefined;
+          const rolesForUser = rolesByUser.get(profile.id);
 
           rolesForUser?.forEach((role) => userRoles.add(role));
 

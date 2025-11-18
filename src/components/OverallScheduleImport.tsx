@@ -453,7 +453,7 @@ export const OverallScheduleImport = () => {
     })();
 
     return {
-      team_id: selectedTeamId,
+      team_id: selectedTeam,
       match_date: `${date}T${time}:00`,
       team: resolvedClubTeam,
       opponent: resolvedOpponent,
